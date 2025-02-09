@@ -8,38 +8,11 @@ using System.Text.Json.Serialization;
 
 namespace OpenAI.Realtime
 {
-    [Obsolete("use SessionConfiguration or RealtimeResponseCreateParams")]
-    public sealed class Options
+    public class SessionConfiguration
     {
-        public static implicit operator SessionConfiguration(Options options)
-            => new(
-                options.Model,
-                options.Modalities,
-                options.Voice,
-                options.Instructions,
-                options.InputAudioFormat,
-                options.OutputAudioFormat,
-                options.InputAudioTranscriptionSettings,
-                options.VoiceActivityDetectionSettings,
-                options.Tools,
-                options.ToolChoice,
-                options.Temperature,
-                options.MaxResponseOutputTokens);
+        public SessionConfiguration() { }
 
-        public static implicit operator RealtimeResponseCreateParams(Options options)
-            => new(
-                options.Modalities,
-                options.Instructions,
-                options.Voice,
-                options.OutputAudioFormat,
-                options.Tools,
-                options.ToolChoice,
-                options.Temperature,
-                options.MaxResponseOutputTokens);
-
-        public Options() { }
-
-        public Options(
+        public SessionConfiguration(
             Model model,
             Modality modalities = Modality.Text | Modality.Audio,
             Voice voice = null,
@@ -122,31 +95,33 @@ namespace OpenAI.Realtime
             }
         }
 
-        [JsonInclude]
-        [JsonPropertyName("id")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public string Id { get; private set; }
-
-        [JsonInclude]
-        [JsonPropertyName("object")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public string Object { get; private set; }
-
-        [JsonInclude]
-        [JsonPropertyName("model")]
-        public string Model { get; private set; }
-
-        [JsonInclude]
-        [JsonPropertyName("expires_at")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public int? ExpiresAtTimeUnixSeconds { get; private set; }
-
-        [JsonInclude]
-        [JsonIgnore]
-        public DateTime? ExpiresAt =>
-            ExpiresAtTimeUnixSeconds.HasValue
-                ? DateTimeOffset.FromUnixTimeSeconds(ExpiresAtTimeUnixSeconds.Value).DateTime
-                : null;
+        internal SessionConfiguration(
+            string model,
+            Modality modalities,
+            string voice,
+            string instructions,
+            RealtimeAudioFormat inputAudioFormat,
+            RealtimeAudioFormat outputAudioFormat,
+            InputAudioTranscriptionSettings inputAudioTranscriptionSettings,
+            VoiceActivityDetectionSettings voiceActivityDetectionSettings,
+            IReadOnlyList<Function> tools,
+            object toolChoice,
+            float? temperature,
+            object maxResponseOutputTokens)
+        {
+            Model = model;
+            Modalities = modalities;
+            Voice = voice;
+            Instructions = instructions;
+            InputAudioFormat = inputAudioFormat;
+            OutputAudioFormat = outputAudioFormat;
+            InputAudioTranscriptionSettings = inputAudioTranscriptionSettings;
+            VoiceActivityDetectionSettings = voiceActivityDetectionSettings;
+            Tools = tools;
+            ToolChoice = toolChoice;
+            Temperature = temperature;
+            MaxResponseOutputTokens = maxResponseOutputTokens;
+        }
 
         [JsonInclude]
         [JsonPropertyName("modalities")]
@@ -155,14 +130,18 @@ namespace OpenAI.Realtime
         public Modality Modalities { get; private set; }
 
         [JsonInclude]
-        [JsonPropertyName("voice")]
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public string Voice { get; private set; }
+        [JsonPropertyName("model")]
+        public string Model { get; private set; }
 
         [JsonInclude]
         [JsonPropertyName("instructions")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string Instructions { get; private set; }
+
+        [JsonInclude]
+        [JsonPropertyName("voice")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string Voice { get; private set; }
 
         [JsonInclude]
         [JsonPropertyName("input_audio_format")]

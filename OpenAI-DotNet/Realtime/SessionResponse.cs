@@ -21,6 +21,6 @@ namespace OpenAI.Realtime
         /// </summary>
         [JsonInclude]
         [JsonPropertyName("session")]
-        public Options Options { get; private set; }
+        public SessionConfiguration Options { get; private set; }
     }
 }

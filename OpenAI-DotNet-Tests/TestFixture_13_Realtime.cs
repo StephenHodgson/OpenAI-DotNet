@@ -32,7 +32,7 @@ namespace OpenAI.Tests
                     })
                 };
 
-                var options = new Options(Model.GPT4oRealtime, tools: tools);
+                var options = new SessionConfiguration(Model.GPT4oRealtime, tools: tools);
                 session = await OpenAIClient.RealtimeEndpoint.CreateSessionAsync(options, cts.Token);
                 Assert.IsNotNull(session);
                 Assert.IsNotNull(session.Options);
@@ -112,7 +112,7 @@ namespace OpenAI.Tests
                     })
                 };
 
-                var options = new Options(Model.GPT4oRealtime, tools: tools);
+                var options = new SessionConfiguration(Model.GPT4oRealtime, tools: tools);
                 session = await OpenAIClient.RealtimeEndpoint.CreateSessionAsync(options, cts.Token);
                 Assert.IsNotNull(session);
                 Assert.IsNotNull(session.Options);

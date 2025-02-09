@@ -17,12 +17,12 @@ namespace OpenAI.Realtime
         protected override bool? IsWebSocketEndpoint => true;
 
         /// <summary>
-        /// Creates a new realtime session with the provided <see cref="Options"/> options.
+        /// Creates a new realtime session with the provided <see cref="SessionConfiguration"/> options.
         /// </summary>
-        /// <param name="options"><see cref="Options"/>.</param>
+        /// <param name="options"><see cref="SessionConfiguration"/>.</param>
         /// <param name="cancellationToken">Optional, <see cref="CancellationToken"/>.</param>
         /// <returns><see cref="RealtimeSession"/>.</returns>
-        public async Task<RealtimeSession> CreateSessionAsync(Options options = null, CancellationToken cancellationToken = default)
+        public async Task<RealtimeSession> CreateSessionAsync(SessionConfiguration options = null, CancellationToken cancellationToken = default)
         {
             string model = string.IsNullOrWhiteSpace(options?.Model) ? Models.Model.GPT4oRealtime : options!.Model;
             var queryParameters = new Dictionary<string, string>();

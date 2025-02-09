@@ -47,6 +47,10 @@ namespace OpenAI.Realtime
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public IReadOnlyList<ConversationItem> Output { get; private set; }
 
+        [JsonInclude]
+        [JsonPropertyName("metadata")]
+        public IReadOnlyDictionary<string, object> Metadata { get; private set; }
+
         /// <summary>
         /// Usage statistics for the Response, this will correspond to billing.
         /// A Realtime API session will maintain a conversation context and append new Items to the Conversation,
@@ -56,5 +60,59 @@ namespace OpenAI.Realtime
         [JsonPropertyName("usage")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public Usage Usage { get; private set; }
+
+        /// <summary>
+        /// Which conversation the response is added to, determined by the `conversation`
+        /// field in the `response.create` event. If `auto`, the response will be added to
+        /// the default conversation and the value of `conversation_id` will be an id like
+        /// `conv_1234`. If `none`, the response will not be added to any conversation and
+        /// the value of `conversation_id` will be `null`. If responses are being triggered
+        /// by server VAD, the response will be added to the default conversation, thus
+        /// the `conversation_id` will be an id like `conv_1234`.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("conversation_id")]
+        public string ConversationId { get; private set; }
+
+        /// <summary>
+        /// The voice the model used to respond.
+        /// Current voice options are `alloy`, `ash`, `ballad`, `coral`, `echo` `sage`, `shimmer` and `verse`.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("voice")]
+        public string Voice { get; private set; }
+
+        /// <summary>
+        /// The set of modalities the model used to respond. If there are multiple modalities,
+        /// the model will pick one, for example if `modalities` is `["text", "audio"]`, the model
+        /// could be responding in either text or audio.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("modalities")]
+        [JsonConverter(typeof(ModalityConverter))]
+        public Modality Modalities { get; private set; }
+
+        /// <summary>
+        /// The format of output audio. Options are `pcm16`, `g711_ulaw`, or `g711_alaw`.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("output_audio_format")]
+        [JsonConverter(typeof(Extensions.JsonStringEnumConverter<RealtimeAudioFormat>))]
+        public RealtimeAudioFormat OutputAudioFormat { get; private set; }
+
+        /// <summary>
+        /// Sampling temperature for the model, limited to [0.6, 1.2]. Defaults to 0.8.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("temperature")]
+        public float Temperature { get; private set; }
+
+        /// <summary>
+        ///  Maximum number of output tokens for a single assistant response, inclusive of tool calls, that was used in this response.
+        /// </summary>
+        [JsonInclude]
+        [JsonPropertyName("max_output_tokens")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public object MaxOutputTokens { get; private set; }
     }
 }
