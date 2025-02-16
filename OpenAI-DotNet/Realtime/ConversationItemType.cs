@@ -11,6 +11,8 @@ namespace OpenAI.Realtime
         [EnumMember(Value = "function_call")]
         FunctionCall,
         [EnumMember(Value = "function_call_output")]
-        FunctionCallOutput
+        FunctionCallOutput,
+        [EnumMember(Value = "item_reference")]
+        ItemReference
     }
 }

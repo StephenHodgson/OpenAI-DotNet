@@ -1,5 +1,6 @@
 ﻿// Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using System;
 using System.Text.Json.Serialization;
 
 namespace OpenAI.Realtime
@@ -15,9 +16,9 @@ namespace OpenAI.Realtime
     {
         public UpdateSessionRequest() { }
 
-        public UpdateSessionRequest(Options options)
+        public UpdateSessionRequest(SessionConfiguration configuration)
         {
-            Session = options;
+            Configuration = configuration;
         }
 
         /// <inheritdoc />
@@ -31,10 +32,14 @@ namespace OpenAI.Realtime
         public override string Type { get; protected set; } = "session.update";
 
         /// <summary>
-        /// The session resource.
+        /// The session configuration options.
         /// </summary>
         [JsonInclude]
         [JsonPropertyName("session")]
-        public Options Session { get; private set; }
+        public SessionConfiguration Configuration { get; private set; }
+
+        [JsonIgnore]
+        [Obsolete("use UpdateSessionRequest.Configuration")]
+        public SessionConfiguration Session => Configuration;
     }
 }

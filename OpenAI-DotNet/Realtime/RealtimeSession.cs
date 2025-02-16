@@ -23,10 +23,13 @@ namespace OpenAI.Realtime
         /// </summary>
         public int EventTimeout { get; set; } = 30;
 
+        [Obsolete("Use Configuration")]
+        public SessionConfiguration Options => Configuration;
+
         /// <summary>
-        /// The options for the session.
+        /// The configuration options for the session.
         /// </summary>
-        public Options Options { get; internal set; }
+        public SessionConfiguration Configuration { get; internal set; }
 
         #region Internal
 
@@ -351,7 +354,7 @@ namespace OpenAI.Realtime
                     switch (clientEvent)
                     {
                         case UpdateSessionRequest when serverEvent is SessionResponse sessionResponse:
-                            Options = sessionResponse.Options;
+                            Configuration = sessionResponse.SessionConfiguration;
                             Complete();
                             return;
                         case InputAudioBufferCommitRequest when serverEvent is InputAudioBufferCommittedResponse:
@@ -362,23 +365,23 @@ namespace OpenAI.Realtime
                             Complete();
                             return;
                         case CreateResponseRequest when serverEvent is RealtimeResponse serverResponse:
+                        {
+                            if (serverResponse.Response.Status == RealtimeResponseStatus.InProgress)
                             {
-                                if (serverResponse.Response.Status == RealtimeResponseStatus.InProgress)
-                                {
-                                    return;
-                                }
-
-                                if (serverResponse.Response.Status != RealtimeResponseStatus.Completed)
-                                {
-                                    tcs.TrySetException(new Exception(serverResponse.Response.StatusDetails.Error?.ToString() ?? serverResponse.Response.StatusDetails.Reason));
-                                }
-                                else
-                                {
-                                    Complete();
-                                }
-
-                                break;
+                                return;
                             }
+
+                            if (serverResponse.Response.Status != RealtimeResponseStatus.Completed)
+                            {
+                                tcs.TrySetException(new Exception(serverResponse.Response.StatusDetails.Error?.ToString() ?? serverResponse.Response.StatusDetails.Reason));
+                            }
+                            else
+                            {
+                                Complete();
+                            }
+
+                            break;
+                        }
                     }
                 }
                 catch (Exception e)

@@ -29,8 +29,12 @@ More context [on Roger Pincombe's blog](https://rogerpincombe.com/openai-dotnet-
     <AssemblyOriginatorKeyFile>OpenAI-DotNet.pfx</AssemblyOriginatorKeyFile>
     <IncludeSymbols>true</IncludeSymbols>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Version>8.5.4</Version>
+    <Version>8.6.0</Version>
     <PackageReleaseNotes>
+Version 8.6.0
+- Deprecated OpenAI.Realtime.Options
+- Added OpenAI.Realtime.RealtimeOptions to specify the options of the RealtimeSession
+- Added OpenAI.Realtime.RealtimeResponseCreateParams to specify the options of the CreateResponseRequest
 Version 8.5.4
 - Update ChatRequest to support o3 series reasoning models
 Version 8.5.3

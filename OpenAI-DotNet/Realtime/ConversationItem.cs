@@ -35,12 +35,12 @@ namespace OpenAI.Realtime
         }
 
         public ConversationItem(Role role, RealtimeContent content)
-            : this(role, new[] { content })
+            : this(role, [content])
         {
         }
 
         public ConversationItem(RealtimeContent content)
-            : this(Role.User, new[] { content })
+            : this(Role.User, [content])
         {
         }
 
@@ -82,7 +82,7 @@ namespace OpenAI.Realtime
         [JsonPropertyName("type")]
         [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
         [JsonConverter(typeof(Extensions.JsonStringEnumConverter<ConversationItemType>))]
-        public ConversationItemType Type { get; private set; }
+        public ConversationItemType Type { get; internal set; }
 
         /// <summary>
         /// The status of the item ("completed", "in_progress", "incomplete").
